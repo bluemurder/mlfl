@@ -1,0 +1,13 @@
+https://classroom.udacity.com/courses/ud501/lessons
+
+Prerequisites:
+1- install python
+2- install pip: https://pip.pypa.io/en/latest/installing/
+3- to call python: cd c:\Python27
+4- python -m pip install pandas
+5- python -m pip install matplotlib
+
+Editing (windows):
+1- Usee Python IDLE GUI
+2- otherwise, right click on .py file, "Edit with IDLE"
+3- Run
