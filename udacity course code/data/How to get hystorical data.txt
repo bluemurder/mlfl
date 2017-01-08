@@ -1,0 +1,5 @@
+1- open finance.yahoo.com
+2- enter in search bar the symbol
+3- click on tab 'Historical Data'
+4- select the maximum range, and make sure that frequency is daily
+5- click on 'Download Data' link
