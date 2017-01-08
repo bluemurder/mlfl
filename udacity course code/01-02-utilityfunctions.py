@@ -55,7 +55,7 @@ def test_run():
 	print df.ix['2010-01-01' : '2010-01-31']
 	
 	# Slice by columns (symbols)
-	print df.['GOOG']
+	print df['GOOG']
 	print df[['IBM', 'GLD']]
 	
 	# Slice by row and columns

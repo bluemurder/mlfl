@@ -24,7 +24,7 @@ def test_run():
 		na_values = ['nan'])
 		
 		# Rename to prevent clash
-		df_temp = df_temp.rename(columns{'Adj Close' : symbol})
+		df_temp = df_temp.rename(columns={'Adj Close' : symbol})
 		
 		# Use default how='left'
 		df = df1.join(df_temp)
