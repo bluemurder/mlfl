@@ -1,0 +1,55 @@
+Computing Sharpe Ratio
+
+First formula: ex ante Sharpe Ratio
+
+S = E[Rp - Rf] / std[Rp - Rf]
+
+where:
+E -> Expectation
+std -> Standard deviation
+Rp = portfolio return
+Rf = risk-free rate of return
+
+Approximation using historical values:
+
+S = mean(daily_rets - daily_rf) / std(daily_rets - daily_rf)
+
+Daily_rf can be computed in three ways:
+* LIBOR
+* 3mo T-bill
+* 0% (present positive interest of a bank)
+
+Traditional shortcut: if a bank positive interest is 10% in a year, daily_rf can be summarized as:
+
+daily_rf = sqrt_252(1.0 + 0.1) - 1
+
+SO, if daily_rf is more than zero, S can be rewritten as:
+
+S = mean(daily_rets - daily_rf) / std(daily_rets)
+where:
+daily_rf = sqrt_252(1.0 + annual_bank_positive_interest) - 1
+
+Finally, S can be weighted according to our sample measure.
+
+Sannual = K * S, where K = sqrt(# samples per year)
+K = sqrt(252) for daily
+K = sqrt(52) for weekly
+K = sqrt(12) for monthly
+
+S is conceived as an annual measure, so if sampling is on a daily basis, 
+
+Sannual = sqrt(252) * mean(daily_rets - daily_rf) / std(daily_rets)
+
+Example: given
+60 days of data,
+avg daily ret = 10bps = 0.001
+daily risky free = 2 bps = 0.0002
+std daily ret = 10 bps = 0.001
+
+Sannualized = sqrt(252) * 0.0008 / 0.001 = 12.70
+
+Now one can build a tool able to find automatically:
+* Cumulative return
+* Average daily return
+* Risk (std of daily return)
+* Sharpe Ratio
