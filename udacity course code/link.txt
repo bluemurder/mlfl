@@ -6,6 +6,10 @@ Prerequisites:
 3- to call python: cd c:\Python27
 4- python -m pip install pandas
 5- python -m pip install matplotlib
+6- Get whl files for numpy+mkl and scipy from http://www.lfd.uci.edu/~gohlke/pythonlibs/
+   (in my case: numpy-1.12.0rc2+mkl-cp27-cp27m-win32.whl and scipy-0.18.1-cp27-cp27m-win32.whl)
+7- python -m pip install numpy-1.12.0rc2+mkl-cp27-cp27m-win32.whl
+8- python -m pip install scipy-0.18.1-cp27-cp27m-win32.whl
 
 Editing (windows):
 1- Usee Python IDLE GUI
