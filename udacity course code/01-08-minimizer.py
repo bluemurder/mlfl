@@ -25,6 +25,9 @@ def test_run():
     plt.title("Minima of an objective function")
     plt.show()
 
+    # Note! flat functions (with slope = 0) or local minima are dfficult to
+    # solve with present minimizer
+
 
 if __name__ == "__main__":
     test_run()
