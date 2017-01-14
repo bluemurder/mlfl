@@ -1,0 +1,17 @@
+Hedge fund risks: two stock scenario
+
+A: predict +1% over mkt
+betaA = 1.0
+
+B: predict -1% below mkt
+betaB = 2.0
+
+So hedge fund manager will buy long $50 of A, and sell short -$50 of B.
+
+If market will not move:
+rA = betaA * rm + alphaA = alphaA = 1% = $0.5
+rB = betaB * rm + alphaB = alphaB = 1% = $0.5
+
+If market goes +10%?
+rA = betaA * rm + alphaA = 10% + 1% = 11% = 5.5
+rB = betaB * rm + alphaB = 20% - 1% = -19% = -9.5

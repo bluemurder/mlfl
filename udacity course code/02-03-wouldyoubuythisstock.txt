@@ -1,0 +1,24 @@
+Would you buy this stock?
+
+* Book value
+  10 airplanes at $10M each
+  Brand name at $10M
+  $20M loan liability
+  = $100M - $20M = $80M
+  
+* Intrinsic value
+  $1M dividends/year
+  5% Discount Ratio
+  = 1M / 0.05 = $20M
+
+* Market cap
+  1M shares outstanding
+  $75 stock price
+  = $75M
+  
+Buy?
+Yes, you should buy it right away!
+
+Ignoring the intrinsic value, if you buy the entire company off the market (for $75M) and immediately sell it for its book value ($80M), you have a $5M profit right there!
+
+Even if you are buying some stocks (instead of the whole company), the stock price is expected to increase (as it is currently undervalued).
