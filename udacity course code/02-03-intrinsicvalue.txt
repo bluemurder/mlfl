@@ -1,0 +1,21 @@
+The value of a future dollar from a company
+
+PV = FV / (1 + IR) ^ i
+where:
+PV = present value of a future dollar
+FV = future value
+i = number of years after the dollar will be delivered
+IR = interest rate
+
+The IR is equal to the government interest rate if you are sure that the company will pay that dollar (the dividend) every year, as you are sure that the government will pay that dollar on a bond.
+
+If you are less sure concerning that payment, the IR needs to be a little higher. --> this is the Discount Rate.
+
+DR is higher if you trust the company less or if you think that it's more risky.
+
+Consider the sum of all the future dividends, and rename (1 + IR) = n:
+sum on i=1 to infinite (FV / n^i) = FV / (n - 1) = FV / DR
+
+In case of a dollar machine producing 1$/year, with a DR = 5% (higher than the government IR) we have:
+FV / DR = 1$ / 0.05 = 20$. The value of our dollar machine is 20$. --> Intrinsic value
+Note that FV are the dividends, and DR is the discount rate. The discount rate models the interest rate starting from the risk of the stock.

@@ -1,0 +1,8 @@
+Which criteria would be easiest to solve for, in order to make a portfolio optimization?
+1- Cumulative return
+2- Minimum volatility
+3- Sharpe ratio
+
+Cumulative return is the most trivial measure to use - simply investing all your money in the stock with maximum return (and none in others) would be your optimal portfolio, in this case.
+
+Hence, it is the easiest to solve for. But probably not the best for risk mitigation.
