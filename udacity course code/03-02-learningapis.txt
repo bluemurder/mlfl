@@ -1,0 +1,18 @@
+For linear regression:
+learner = LinRegLearner()
+learner.train(Xtrain, Ytrain)
+y = learner.query(Xtest)
+
+For KNN:
+learner = KNNLearner(K=3)
+learner.train(Xtrain, Ytrain)
+y = learner.query(Xtest)
+
+class LinRegLearner::
+	def __init__():
+		pass
+	def train(X, Y):
+		self.m, self.b = favorite_linreg(X, Y)
+	def query(X)
+		y = self.m * X + self.b
+		return y

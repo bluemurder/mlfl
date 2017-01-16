@@ -1,0 +1,35 @@
+Which bet is better?
+chance to win = 51%
+1000 coins on a single table or a single coin in parallel on 1000 different tables?
+* Answer = 1000 different tables, in order to mitigate the risk.
+
+Expected return:
+* single bet -> 0.51 * 1000 + 0.49 * (-1000) = $20
+* multibet   -> (0.51 * 1 + 0.49 * -1) * 1000 = $20
+
+Risk
+Chance to lose it all:
+* single bet -> 49%
+* multibet -> .49 * .49 * ... * .49 = .49^1000, very very small
+
+Stddev
+* multibet -> std(-1,1,1,-1,1,-1,...) = 1.0. every number represents the outcome of all the tables
+In next case, 1000 or -1000 is the outcome of first table, and 0 is the outcome of all other tables
+* single bet -> std(1000,0,0,0,...) = std(-1000,0,0,0,...) = 31.62
+So here the risk is much much larger
+
+Reward/Risk
+* single bet -> $20 / $31.62 = 0.63
+* multibet -> $20 / $1 = 20
+
+Sharpe ratio
+SRmulti = SRsingle * sqrt(bets)
+20 = .63 * sqrt(1000)
+
+This formulation is analogue to the Grinold's fundamental law of active portfolio management:
+performance = skill * sqrt(breadth)
+
+Lessons:
+1. higher alpha generates higher sharpe ratio
+2. more esecution opportunities provides a higher sharpe ratio
+3. sharpe ratio grows as the square root of breadth
