@@ -1,0 +1,104 @@
+"""Utility functions"""
+
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import datetime
+import time
+import urllib2
+
+def plot_selected(df, columns, start_index, end_index):
+    """Plot the desired columns over index values in the given range."""
+    df_temp = df.ix[start_index : end_index, columns]
+    plot_data(df_temp, "Selected data")
+
+def download_data(symbols, from_date):
+    """Download the desired symbol data from specified date to today, with a daily basis."""
+    curr_date = datetime.now()
+    from_date = datetime.strptime(from_date, '%Y-%m-%d')
+    for symbol in symbols:
+	link = "http://chart.finance.yahoo.com/table.csv?s={}&a={}&b={}&c={}&d={}&e={}&f={}&g=d&ignore=.csv".format(
+            symbol, from_date.month - 1, from_date.day, from_date.year, curr_date.month - 1, curr_date.day, curr_date.year)
+	file_name = "data\{}.csv".format(symbol)
+        u = urllib2.urlopen(link)
+        f = open(file_name, 'wb')
+        meta = u.info()
+        file_size = int(meta.getheaders("Content-Length")[0])
+        print "Downloading: %s Bytes: %s" % (file_name, file_size)
+
+        file_size_dl = 0
+        block_sz = 8192
+        while True:
+            buffer = u.read(block_sz)
+            if not buffer:
+                break
+
+            file_size_dl += len(buffer)
+            f.write(buffer)
+            status = r"%10d  [%3.2f%%]" % (file_size_dl, file_size_dl * 100. / file_size)
+            status = status + chr(8)*(len(status)+1)
+            print status,
+
+        f.close()
+
+def symbol_to_path(symbol, base_dir = "data"):
+    """Return CSV file path given ticker symbol."""
+    return os.path.join(base_dir, "{}.csv".format(str(symbol)))
+
+def get_data(symbols, dates, ref_symbol = 'SPY'):
+    """Read stock data (adjusted close) for given symbols from CSV files."""
+    df = pd.DataFrame(index = dates)
+    if ref_symbol not in symbols: # add ref_symbol(SPY) for reference, if absent
+        symbols.insert(0, ref_symbol)
+    
+    for symbol in symbols:
+        df_temp = pd.read_csv(symbol_to_path(symbol), index_col = "Date",
+                        parse_dates = True, usecols = ['Date', 'Adj Close'], 
+                        na_values = ['nan'])
+        # Rename to prevent clash
+        df_temp = df_temp.rename(columns = {'Adj Close' : symbol})
+        df = df.join(df_temp)
+        if symbol == ref_symbol: # drop dates ref_symbol(SPY) did not trade
+            df = df.dropna(subset = [ref_symbol])
+        
+    return df
+    
+def plot_data(df, title = 'Stock Prices', xlabel = 'Date', ylabel = 'Price'):
+    '''Plot stock prices'''
+    axis = df.plot(title = title, fontsize = 12)
+    axis.set_xlabel(xlabel)
+    axis.set_ylabel(ylabel)
+    plt.show()
+
+def how_long(func, *args):
+    """Execute function with given arguments, measurng exec time."""
+    t0 = time()
+    result = func(*args)
+    t1 = time()
+    return result, t1 - t0
+
+def get_rolling_mean(values, window):
+    """Return rolling mean of given values, using specified window size."""
+    return pd.rolling_mean(values, window=window)
+
+def get_rolling_std(values, window):
+    """Return rolling standard deviation of given values, using specified window size."""
+    return pd.rolling_std(values, window = window)
+
+def get_bollinger_bands(rm, rstd):
+    """Return upper and lower Bollinger Bands."""
+    upper_band = rm + 2 * rstd
+    lower_band = rm - 2 * rstd
+    return upper_band, lower_band
+
+def compute_daily_returns(df):
+    """Compute and return the daily return values."""
+    daily_returns = (df / df.shift(1)) - 1 # with Pandas
+    daily_returns.ix[0, :] = 0 # set daily returns for row 0 to 0
+    return daily_returns
+
+def fill_missing_values(df_data):
+    """Fill missing values in data frame, in place."""
+    df_data.fillna(method="ffill", inplace=True)
+    df_data.fillna(method="bfill", inplace=True)
+
