@@ -20,15 +20,27 @@ def portfolio_statistics(df, print_stats = False):
 
     # Compute data by symbol
     daily_returns = compute_daily_returns(df)
+
+    # Debug
+    plot_data(daily_returns, title = 'Daily returns', xlabel = 'Date', ylabel = '..')
+
+    # Sum by column (by symbol)
+    allsymbols_daily_returns = daily_returns.sum(axis = 1)
+
+    # Average return
+    avg_daily_returns = allsymbols_daily_returns.mean()
+
+    # Risk
+    risk = allsymbols_daily_returns.std()
     
-    avg_daily_returns = np.mean(daily_returns)
-    risks = daily_returns.std()
+    #avg_daily_returns = np.mean(daily_returns)
+    #risks = daily_returns.sum(axis = 1).std()
 
     if print_stats == True:
-        print "Cumulative return:\n{}".format(daily_returns.sum().sum())
-        print "Average daily return:\n{}".format(avg_daily_returns.sum())
-        print "Risk:\n{}".format(risks)
-        print "Sharpe Ratio: "
+        print "Cumulative return: {}".format(allsymbols_daily_returns.sum())
+        print "Average daily return: {}".format(avg_daily_returns)
+        print "Risk: {}".format(risk)
+        print "Sharpe Ratio: {}".format(sharpe_ratio(daily_returns))
 
 def select_portfolio(symbols, start_date, stats_dates, ref_symbol, skip_download = False):
     """Download and preprocess a list of symbols
@@ -145,12 +157,15 @@ def fill_missing_values(df_data):
     df_data.fillna(method="ffill", inplace=True)
     df_data.fillna(method="bfill", inplace=True)
 
-def sharpe_ratio(df, daily_rf = 0):
+def sharpe_ratio(daily_returns, daily_rf = 0):
     """SR = mean(daily_rets - daily_rf) / std(daily_rets - daily_rf)
 
     Daily_rf can be computed in three ways:
     * LIBOR
     * 3mo T-bill
     * 0% (present positive interest of a bank)"""
-    daily_rets = compute_daily_returns(df)
+    daily_returns = daily_returns - daily_rf
+    daily_returns = daily_returns.sum(axis = 1)
+    sr = daily_returns.mean() / daily_returns.std()
+    return sr * np.sqrt(252)
     
