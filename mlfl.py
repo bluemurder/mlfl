@@ -1,5 +1,7 @@
 import util
 import config
+import time
+from datetime import datetime
 
 def test_run():
     print "Welcome to MLFL {}".format(config.version)
@@ -9,11 +11,17 @@ def test_run():
     print "1. Select portfolio"
     print "0. Exit"
 
-    choice = raw_input()
+    choice = '1' #raw_input()
 
     if choice == '1':
-        symbol_list = raw_input("Insert symbol list comma separated\n")
-        select_portfolio(symbol_list)
+        symbol_list = config.test_portfolio #raw_input("Insert symbol list comma separated\n")
+        symbol_list.append('ANX.MI')
+        symbols = symbol_list #symbol_list.upper().split(',')
+        if len(symbols) < 1:
+            print "Error, symbol list not valid"
+            exit()
+        util.select_portfolio(symbols, config.start_date, ['2015-01-01', '2015-12-31'], config.ref_symbol, skip_download = True)
+        #util.select_portfolio(symbols, config.start_date, ['2009-01-01', '2017-01-15'], config.ref_symbol, skip_download = True)
         
     elif choice == '0':
         print "Exiting..."
@@ -21,21 +29,6 @@ def test_run():
     else:
         print "Invalid choice"
         exit()
-
-def select_portfolio(symbols_comma_separated):
-    """Download and preprocess a list of symbols"""
-    symbols = symbols_comma_separated.upper().split(',')
-    if len(symbols) < 1:
-        print "Error, symbol list not valid"
-        return
-
-    # Use always the reference symbol also
-    symbols.append(config.ref_symbol)
-
-    # Download data
-    util.download_data(symbols, config.start_date)
-
-    
 
 if __name__ == "__main__":
     test_run()

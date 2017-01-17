@@ -3,10 +3,71 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 from datetime import datetime
 import time
 import urllib
 
+def portfolio_statistics(df, print_stats = False):
+    """Get portfolio statistics
+
+    Parameters
+    ----------
+    df: data frame with portfolio data
+
+    Returns a list containing Cumulative return, Average daily return, Risk (std of daily return), Sharpe Ratio
+    """
+
+    # Compute data by symbol
+    daily_returns = compute_daily_returns(df)
+    
+    avg_daily_returns = np.mean(daily_returns)
+    risks = daily_returns.std()
+
+    if print_stats == True:
+        print "Cumulative return:\n{}".format(daily_returns.sum().sum())
+        print "Average daily return:\n{}".format(avg_daily_returns.sum())
+        print "Risk:\n{}".format(risks)
+        print "Sharpe Ratio: "
+
+def select_portfolio(symbols, start_date, stats_dates, ref_symbol, skip_download = False):
+    """Download and preprocess a list of symbols
+
+    Parameters
+    ----------
+    symbols: list of symbols to consider
+    start_date: start date used to download data
+    stats_dates: dates range used to build statistics, in the form ['2009-01-01','2009-12-31']
+    ref_symbol: market reference
+
+    Returns ...
+    """
+
+    # Use always the reference symbol also
+    symbols.append(ref_symbol)
+
+    # Download data
+    if skip_download == False:
+        try:
+            download_data(symbols, start_date)
+        except:
+            print "Unable to download selected data, processing old files on disk."
+
+    # Build dataframes
+    curr_date = datetime.now()
+    #dates = pd.date_range(start_date, "{}-{}-{}".format(curr_date.year, curr_date.month, curr_date.day))
+    dates = pd.date_range(stats_dates[0], stats_dates[1])
+    df = get_data(symbols, dates, ref_symbol)
+
+    # Fill missing values
+    fill_missing_values(df)
+
+    # Plot
+    plot_data(df)
+
+    # Compute statistics
+    portfolio_statistics(df, True)
+    
 def plot_selected(df, columns, start_index, end_index):
     """Plot the desired columns over index values in the given range."""
     df_temp = df.ix[start_index : end_index, columns]
