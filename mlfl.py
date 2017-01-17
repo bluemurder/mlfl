@@ -28,7 +28,14 @@ def select_portfolio(symbols_comma_separated):
     if len(symbols) < 1:
         print "Error, symbol list not valid"
         return
+
+    # Use always the reference symbol also
+    symbols.append(config.ref_symbol)
+
+    # Download data
     util.download_data(symbols, config.start_date)
+
+    
 
 if __name__ == "__main__":
     test_run()

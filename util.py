@@ -5,7 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
 import time
-import urllib2
+import urllib
 
 def plot_selected(df, columns, start_index, end_index):
     """Plot the desired columns over index values in the given range."""
@@ -20,26 +20,8 @@ def download_data(symbols, from_date):
 	link = "http://chart.finance.yahoo.com/table.csv?s={}&a={}&b={}&c={}&d={}&e={}&f={}&g=d&ignore=.csv".format(
             symbol, from_date.month - 1, from_date.day, from_date.year, curr_date.month - 1, curr_date.day, curr_date.year)
 	file_name = "data\{}.csv".format(symbol)
-        u = urllib2.urlopen(link)
-        f = open(file_name, 'wb')
-        meta = u.info()
-        file_size = int(meta.getheaders("Content-Length")[0])
-        print "Downloading: %s Bytes: %s" % (file_name, file_size)
-
-        file_size_dl = 0
-        block_sz = 8192
-        while True:
-            buffer = u.read(block_sz)
-            if not buffer:
-                break
-
-            file_size_dl += len(buffer)
-            f.write(buffer)
-            status = r"%10d  [%3.2f%%]" % (file_size_dl, file_size_dl * 100. / file_size)
-            status = status + chr(8)*(len(status)+1)
-            print status,
-
-        f.close()
+        print "Downloading {}...".format(file_name)
+	urllib.urlretrieve(link, file_name)
 
 def symbol_to_path(symbol, base_dir = "data"):
     """Return CSV file path given ticker symbol."""
@@ -102,3 +84,12 @@ def fill_missing_values(df_data):
     df_data.fillna(method="ffill", inplace=True)
     df_data.fillna(method="bfill", inplace=True)
 
+def sharpe_ratio(df, daily_rf = 0):
+    """SR = mean(daily_rets - daily_rf) / std(daily_rets - daily_rf)
+
+    Daily_rf can be computed in three ways:
+    * LIBOR
+    * 3mo T-bill
+    * 0% (present positive interest of a bank)"""
+    daily_rets = compute_daily_returns(df)
+    
