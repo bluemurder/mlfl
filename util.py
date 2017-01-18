@@ -177,11 +177,13 @@ def how_long(func, *args):
 
 def get_rolling_mean(values, window):
     """Return rolling mean of given values, using specified window size."""
-    return pd.rolling_mean(values, window=window)
+    # deprecated return pd.rolling_mean(values, window=window)
+    return values.rolling(window = window, center = False).mean()
 
 def get_rolling_std(values, window):
     """Return rolling standard deviation of given values, using specified window size."""
-    return pd.rolling_std(values, window = window)
+    # deprecated return pd.rolling_std(values, window = window)
+    return values.rolling(window = window, center = False).std()
 
 def get_bollinger_bands(rm, rstd):
     """Return upper and lower Bollinger Bands."""
