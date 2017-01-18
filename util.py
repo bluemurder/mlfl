@@ -14,6 +14,7 @@ def portfolio_statistics(df, print_stats = False):
     Parameters
     ----------
     df: data frame with portfolio data
+    print_stats: flag used to print evaluated data
 
     Returns a list containing Cumulative return, Average daily return, Risk (std of daily return), Sharpe Ratio
     """
@@ -27,20 +28,25 @@ def portfolio_statistics(df, print_stats = False):
     # Sum by column (by symbol)
     allsymbols_daily_returns = daily_returns.sum(axis = 1)
 
+    # Cumulative return
+    cumulative_return = allsymbols_daily_returns.sum()
+
     # Average return
-    avg_daily_returns = allsymbols_daily_returns.mean()
+    avg_daily_return = allsymbols_daily_returns.mean()
 
     # Risk
     risk = allsymbols_daily_returns.std()
-    
-    #avg_daily_returns = np.mean(daily_returns)
-    #risks = daily_returns.sum(axis = 1).std()
+
+    # Sharpe ratio
+    sharpe_ratio_annualized = sharpe_ratio(daily_returns)
 
     if print_stats == True:
-        print "Cumulative return: {}".format(allsymbols_daily_returns.sum())
-        print "Average daily return: {}".format(avg_daily_returns)
+        print "Cumulative return: {}".format(cumulative_return)
+        print "Average daily return: {}".format(avg_daily_return)
         print "Risk: {}".format(risk)
-        print "Sharpe Ratio: {}".format(sharpe_ratio(daily_returns))
+        print "Sharpe Ratio: {}".format(sharpe_ratio_annualized)
+
+    return (cumulative_return, avg_daily_return, risk, sharpe_ratio_annualized)
 
 def select_portfolio(symbols, start_date, stats_dates, ref_symbol, skip_download = False):
     """Download and preprocess a list of symbols
@@ -56,7 +62,7 @@ def select_portfolio(symbols, start_date, stats_dates, ref_symbol, skip_download
     """
 
     # Use always the reference symbol also
-    symbols.append(ref_symbol)
+    #symbols.append(ref_symbol)
 
     # Download data
     if skip_download == False:
@@ -79,6 +85,38 @@ def select_portfolio(symbols, start_date, stats_dates, ref_symbol, skip_download
 
     # Compute statistics
     portfolio_statistics(df, True)
+
+    # Select one stock
+    df = pd.DataFrame(df['ANX.MI'])
+
+    plot_data(df)
+
+    # Compute momentum
+    #m = momentum(df, 15)
+
+    # Compute SMA
+    sma = simple_moving_average(df, 15)
+
+    # Compute bollinger bands
+    ubb, lbb = bollinger_bands(df, 15)
+
+    # Join momentum on the same plot
+    #df = df.join(m)
+
+    # Join SMA on same plot
+    sma = pd.DataFrame(sma)
+    sma.columns = ["ANX.MI_SMA_15"]
+    df = df.join(sma)
+
+    # Join BB on same plot
+    ubb = pd.DataFrame(ubb)
+    ubb.columns = ["ANX.MI_upperBB_15"]
+    lbb = pd.DataFrame(lbb)
+    lbb.columns = ["ANX.MI_lowerBB_15"]
+    df = df.join(ubb)
+    df = df.join(lbb)
+
+    plot_data(df)
     
 def plot_selected(df, columns, start_index, end_index):
     """Plot the desired columns over index values in the given range."""
@@ -103,17 +141,22 @@ def symbol_to_path(symbol, base_dir = "data"):
 def get_data(symbols, dates, ref_symbol = 'SPY'):
     """Read stock data (adjusted close) for given symbols from CSV files."""
     df = pd.DataFrame(index = dates)
-    if ref_symbol not in symbols: # add ref_symbol(SPY) for reference, if absent
+
+    # Add ref_symbol(default: SPY) for reference, if absent
+    if ref_symbol not in symbols: 
         symbols.insert(0, ref_symbol)
     
     for symbol in symbols:
         df_temp = pd.read_csv(symbol_to_path(symbol), index_col = "Date",
                         parse_dates = True, usecols = ['Date', 'Adj Close'], 
                         na_values = ['nan'])
-        # Rename to prevent clash
+
+        # Rename column name
         df_temp = df_temp.rename(columns = {'Adj Close' : symbol})
         df = df.join(df_temp)
-        if symbol == ref_symbol: # drop dates ref_symbol(SPY) did not trade
+
+        # Drop dates ref_symbol(default: SPY) did not trade
+        if symbol == ref_symbol: 
             df = df.dropna(subset = [ref_symbol])
         
     return df
@@ -168,4 +211,44 @@ def sharpe_ratio(daily_returns, daily_rf = 0):
     daily_returns = daily_returns.sum(axis = 1)
     sr = daily_returns.mean() / daily_returns.std()
     return sr * np.sqrt(252)
+
+def momentum(df, n = 5, print_stats = False):
+    """Evaluates momentum with a look of n-th value in the past.
+    Momentum[t] = price[t] / price[t-n] -1
+
+    Parameters
+    ----------
+    df: dataframe containing symbols data
+    n: the shift in the past to consider
+
+    Returns a dataframe with momentum data for each stock
+    """
+
+    # Evaluate momentum
+    momentum_by_stock = (df / df.shift(n)) - 1
+
+    # Set to zero first values to erase NaN entries
+    momentum_by_stock.ix[0 : n, :] = 0
+
+    # Print if requested
+    if print_stats == True:
+        print "momentum:\n{}".format(momentum_by_stock)
+
+    symbols = list(momentum_by_stock.columns.values)
+    column_names = []
+    for symbol in symbols:
+        column_names.append(symbol + "_Momentum_" + str(n))
+
+    momentum_by_stock.columns = column_names
     
+    return momentum_by_stock
+
+def simple_moving_average(df, n):
+    """Simple Moving Average for given stocks"""
+    return get_rolling_mean(df, n)
+
+def bollinger_bands(df, n):
+    """Bollinger Bands for given stocks"""
+    rolling_mean = get_rolling_mean(df, n)
+    rolling_std = get_rolling_std(df, n)
+    return get_bollinger_bands(rolling_mean, rolling_std)

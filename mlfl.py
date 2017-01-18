@@ -20,7 +20,7 @@ def test_run():
         if len(symbols) < 1:
             print "Error, symbol list not valid"
             exit()
-        util.select_portfolio(symbols, config.start_date, ['2015-01-01', '2015-12-31'], config.ref_symbol, skip_download = True)
+        util.select_portfolio(symbols, config.start_date, ['2016-01-01', '2016-12-31'], config.ref_symbol, skip_download = True)
         #util.select_portfolio(symbols, config.start_date, ['2009-01-01', '2017-01-15'], config.ref_symbol, skip_download = True)
         
     elif choice == '0':
