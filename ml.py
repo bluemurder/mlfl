@@ -6,7 +6,7 @@ from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.ensemble import RandomForestRegressor
 import numpy as np
 
-class LinRegLearner::
+class LinRegLearner:
     """Linear regression learning machine"""
 
     def __init__():
@@ -15,13 +15,13 @@ class LinRegLearner::
     def fit(X, y):
         self.model.fit(X, y)
 
-    def predict(X)
+    def predict(X):
         return self.model.predict(X)
 
-    def score(X, y)
+    def score(X, y):
         return self.model.score(X, y)
 
-class KNNLearner::
+class KNNLearner:
     """K-nearest-neighbor regressor"""
 
     def __init__(k = 3):
@@ -30,13 +30,13 @@ class KNNLearner::
     def fit(X, y):
         self.model.fit(X, y)
 
-    def predict(X)
+    def predict(X):
         return self.model.predict(X)
 
-    def score(X, y)
+    def score(X, y):
         return self.model.score(X, y)
 
-class DTLearner::
+class DTLearner:
     """Decision tree regressor"""
 
     def __init__(max_depth = None):
@@ -45,13 +45,13 @@ class DTLearner::
     def fit(X, y):
         self.model.fit(X, y)
 
-    def predict(X)
+    def predict(X):
         return self.model.predict(X)
 
-    def score(X, y)
+    def score(X, y):
         return self.model.score(X, y)
 
-class ETLearner::
+class ETLearner:
     """Extra tree regressor"""
 
     def __init__():
@@ -60,13 +60,13 @@ class ETLearner::
     def fit(X, y):
         self.model.fit(X, y)
 
-    def predict(X)
+    def predict(X):
         return self.model.predict(X)
 
-    def score(X, y)
+    def score(X, y):
         return self.model.score(X, y)
 
-class ETELearner::
+class ETELearner:
     """Extra trees ensemble regressor"""
 
     def __init__(max_depth = None):
@@ -75,13 +75,13 @@ class ETELearner::
     def fit(X, y):
         self.model.fit(X, y)
 
-    def predict(X)
+    def predict(X):
         return self.model.predict(X)
 
-    def score(X, y)
+    def score(X, y):
         return self.model.score(X, y)
 
-class RFELearner::
+class RFELearner:
     """Random forest ensemble regressor"""
 
     def __init__():
@@ -90,8 +90,8 @@ class RFELearner::
     def fit(X, y):
         self.model.fit(X, y)
 
-    def predict(X)
+    def predict(X):
         return self.model.predict(X)
 
-    def score(X, y)
+    def score(X, y):
         return self.model.score(X, y)
