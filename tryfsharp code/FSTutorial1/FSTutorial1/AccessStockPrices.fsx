@@ -9,7 +9,6 @@ let url = "http://ichart.finance.yahoo.com/table.csv?s="
 let getStockPrices stock count =
     // Download the data and split it into lines
     let wc = new WebClient()
-    wc.Proxy <- new WebProxy("it-s-proxy05.it.abb.com:8080", true, null, new NetworkCredential("italleo3", "ALbareto35", "EUROPE"))
     let data = wc.DownloadString(url + stock)
     let dataLines = 
         data.Split([| '\n' |], StringSplitOptions.RemoveEmptyEntries) 
