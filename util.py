@@ -9,45 +9,14 @@ import time
 import urllib
 import ml
 
-def portfolio_statistics(df, print_stats = False):
-    """Get portfolio statistics
-
-    Parameters
-    ----------
-    df: data frame with portfolio data
-    print_stats: flag used to print evaluated data
-
-    Returns a list containing Cumulative return, Average daily return, Risk (std of daily return), Sharpe Ratio
-    """
-
-    # Compute data by symbol
-    daily_returns = compute_daily_returns(df)
-
-    # Debug
-    plot_data(daily_returns, title = 'Daily returns', xlabel = 'Date', ylabel = '..')
-
-    # Sum by column (by symbol)
-    allsymbols_daily_returns = daily_returns.sum(axis = 1)
-
-    # Cumulative return
-    cumulative_return = allsymbols_daily_returns.sum()
-
-    # Average return
-    avg_daily_return = allsymbols_daily_returns.mean()
-
-    # Risk
-    risk = allsymbols_daily_returns.std()
-
-    # Sharpe ratio
-    sharpe_ratio_annualized = sharpe_ratio(daily_returns)
-
-    if print_stats == True:
-        print "Cumulative return: {}".format(cumulative_return)
-        print "Average daily return: {}".format(avg_daily_return)
-        print "Risk: {}".format(risk)
-        print "Sharpe Ratio: {}".format(sharpe_ratio_annualized)
-
-    return (cumulative_return, avg_daily_return, risk, sharpe_ratio_annualized)
+def test_dataframe(ref_symbol):
+    dates = pd.date_range('2016-09-01', '2016-09-15')
+    df = get_data(['ANX.MI'], dates, ref_symbol)
+    df = pd.DataFrame(df['ANX.MI'])
+    m = momentum(df, 5)
+    m.columns = ['ANX.MI']
+    df = pd.DataFrame([df, m])
+    print "Final df:\n{}".format(df)
 
 def select_portfolio(symbols, start_date, stats_dates, ref_symbol, skip_download = False):
     """Download and preprocess a list of symbols
@@ -118,6 +87,46 @@ def select_portfolio(symbols, start_date, stats_dates, ref_symbol, skip_download
     df = df.join(lbb)
 
     plot_data(df)
+
+def portfolio_statistics(df, print_stats = False):
+    """Get portfolio statistics
+
+    Parameters
+    ----------
+    df: data frame with portfolio data
+    print_stats: flag used to print evaluated data
+
+    Returns a list containing Cumulative return, Average daily return, Risk (std of daily return), Sharpe Ratio
+    """
+
+    # Compute data by symbol
+    daily_returns = compute_daily_returns(df)
+
+    # Debug
+    plot_data(daily_returns, title = 'Daily returns', xlabel = 'Date', ylabel = '..')
+
+    # Sum by column (by symbol)
+    allsymbols_daily_returns = daily_returns.sum(axis = 1)
+
+    # Cumulative return
+    cumulative_return = allsymbols_daily_returns.sum()
+
+    # Average return
+    avg_daily_return = allsymbols_daily_returns.mean()
+
+    # Risk
+    risk = allsymbols_daily_returns.std()
+
+    # Sharpe ratio
+    sharpe_ratio_annualized = sharpe_ratio(daily_returns)
+
+    if print_stats == True:
+        print "Cumulative return: {}".format(cumulative_return)
+        print "Average daily return: {}".format(avg_daily_return)
+        print "Risk: {}".format(risk)
+        print "Sharpe Ratio: {}".format(sharpe_ratio_annualized)
+
+    return (cumulative_return, avg_daily_return, risk, sharpe_ratio_annualized)
     
 def plot_selected(df, columns, start_index, end_index):
     """Plot the desired columns over index values in the given range."""

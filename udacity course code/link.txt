@@ -1,5 +1,6 @@
 https://classroom.udacity.com/courses/ud501/lessons
 https://s3.amazonaws.com/quantstart/media/powerpoint/an-introduction-to-backtesting.pdf
+http://cs229.stanford.edu/proj2014/David%20Montague,%20Algorithmic%20Trading%20of%20Futures%20via%20Machine%20Learning.pdf
 
 Prerequisites:
 1- install python
@@ -12,6 +13,8 @@ Prerequisites:
 7- python -m pip install numpy-1.12.0rc2+mkl-cp27-cp27m-win32.whl
 8- python -m pip install scipy-0.18.1-cp27-cp27m-win32.whl
 9- python -m pip install scikit-learn
+10- Get pyqt from http://www.lfd.uci.edu/~gohlke/pythonlibs/#pyqt4
+11- python -m pip install PyQt4-4.11.4-cp27-none-win32.whl
 
 Editing (windows):
 1- Usee Python IDLE GUI
